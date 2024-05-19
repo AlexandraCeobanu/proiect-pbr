@@ -15,11 +15,21 @@ function App() {
   const handleChangeMinorPremise = (event) => {
     setMinorPremise(event.target.value);
   }
-  const handleSubmitPremises = () => {
-    let premises = [selectedValueMajor+ " " + majorPremise , selectedValueMinor + " " +  minorPremise]
+  const handleSubmitPremises = (event) => {
+    event.preventDefault()
+    let premises = [{
+      type: selectedValueMajor,
+      sentence: majorPremise
+    },
+    {
+      type: selectedValueMinor,
+      sentence: minorPremise
+    }]
+    console.log(premises)
     solve(premises)
     .then((response) => {
       setConclusion(response)
+      setError(null)
     })
     .catch((error) => {
       setError(error);
@@ -60,11 +70,16 @@ function App() {
       </div>
       <button type="submit" id="submit" name="submit" value="Login">Generate Conclusion</button>
       </form>
-      {conclusion !== null &&
+      {/* {conclusion !== null &&
        <div>
         <h2>Conclusion : {conclusion}</h2>
         </div>
         }
+        {error !== null &&
+       <div>
+        <h2>Error : {error}</h2>
+        </div>
+        } */}
     </div>
   );
 }
