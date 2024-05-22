@@ -11,11 +11,11 @@ export const solve = async (premises) => {
         if(response.status === 200)
         {
             const conclusion = await response.data;
-            
+            return conclusion.Conclusion;
         }
     }
     catch (error) {
         console.log(`Failed to get conclusion.`,error);
-        throw error.response.data;
+        throw error.response.data.Error;
     }
 };

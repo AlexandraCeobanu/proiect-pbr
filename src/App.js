@@ -25,13 +25,15 @@ function App() {
       type: selectedValueMinor,
       sentence: minorPremise
     }]
-    console.log(premises)
+    
     solve(premises)
     .then((response) => {
+      console.log(response)
       setConclusion(response)
       setError(null)
     })
     .catch((error) => {
+      setConclusion(null);
       setError(error);
     })
   }
@@ -50,9 +52,10 @@ function App() {
 
       <div className='premise-block'>
       <select id="select" value={selectedValueMajor} onChange={handleChangeSelectMajor}>
-        <option value="optiune1">All</option>
-        <option value="optiune2">Some</option>
-        <option value="optiune3">No</option>
+        <option value="All">All</option>
+        <option value="Some">Some</option>
+        <option value="No">No</option>
+        <option value="(empty)">(empty)</option>
       </select>
       <input type="text" id="major-premise" name ="major-premise" required onChange={handleChangeMajorPremise}></input>
       </div>
@@ -61,25 +64,22 @@ function App() {
       <label >Minor premise</label>
       <div className='premise-block'>
       <select id="select" value={selectedValueMinor} onChange={handleChangeSelectMinor}>
-        <option value="optiune1">All</option>
-        <option value="optiune2">Some</option>
-        <option value="optiune3">No</option>
+        <option value="All">All</option>
+        <option value="Some">Some</option>
+        <option value="No">No</option>
+        <option value="(empty)">(empty)</option>
       </select>
       <input type="text" id="major-premise" name ="minor-premise" required onChange={handleChangeMinorPremise}></input>
       </div>
       </div>
-      <button type="submit" id="submit" name="submit" value="Login">Generate Conclusion</button>
-      </form>
-      {/* {conclusion !== null &&
-       <div>
-        <h2>Conclusion : {conclusion}</h2>
-        </div>
+      {conclusion !== null &&
+        <h3>Conclusion : {conclusion}</h3>
         }
         {error !== null &&
-       <div>
-        <h2>Error : {error}</h2>
-        </div>
-        } */}
+        <h3>Error : {error}</h3>
+        }
+      <button style={{ marginTop: conclusion || error ? '1.5em' : '5em' }} type="submit" id="submit" name="submit" value="Login">Generate Conclusion</button>
+      </form>
     </div>
   );
 }
