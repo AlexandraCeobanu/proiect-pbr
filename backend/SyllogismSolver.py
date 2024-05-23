@@ -2,6 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import clips_solver
 import json
 import validation
+import conclusionValidation
+import singular
 
 class MyHTTPRequestHandler(BaseHTTPRequestHandler):
     def _set_cors_headers(self):
@@ -38,8 +40,8 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
                 post_data = self.rfile.read(content_lenght)
                 premises = json.loads(post_data.decode('utf-8'))
 
-                type1, subject1, predicate1, verb1 = validation.validate(premises[0]["type"], premises[0]["sentence"])
-                type2, subject2, predicate2, verb2 = validation.validate(premises[1]["type"], premises[1]["sentence"])
+                type1, subject1, predicate1, verb1, empty1 = validation.validate(premises[0]["type"], premises[0]["sentence"])
+                type2, subject2, predicate2, verb2, empty2 = validation.validate(premises[1]["type"], premises[1]["sentence"])
 
                 if type1 == -1 or type2 == -1:
                     self.send_response(422)
@@ -47,8 +49,11 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(b'{"Error": "One or both premises are invalid! You should have a sentence with a subject (one or two words), a verb (optional +not) and a predicate(one or two words)"}')
                 else:
-                    conclusion = clips_solver.solve(type1, type2, subject1, subject2, predicate1, predicate2)
-                    print(conclusion)
+                    if empty2 == 1:
+                        subject1, subject2, predicate1, predicate2 = singular.getSingular(subject1, subject2, predicate1, predicate2)
+                    conclusion = clips_solver.solve(type1, type2, subject1, subject2, predicate1, predicate2, verb1, verb2)
+                    if empty2 == 1:
+                        conclusion = conclusionValidation.validate_conclusion(conclusion)
 
                     if len(conclusion):
                         self.send_response(200)
