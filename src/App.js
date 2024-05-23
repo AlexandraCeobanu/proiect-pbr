@@ -55,7 +55,6 @@ function App() {
         <option value="All">All</option>
         <option value="Some">Some</option>
         <option value="No">No</option>
-        <option value="(empty)">(empty)</option>
       </select>
       <input type="text" id="major-premise" name ="major-premise" required onChange={handleChangeMajorPremise}></input>
       </div>
